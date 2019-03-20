@@ -1,2 +1,2 @@
-# snoox-xoi
-XOI Server
+# snoox-server XOI
+XOI server
