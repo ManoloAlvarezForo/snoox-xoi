@@ -14,12 +14,12 @@ const http = require('http');
 
 const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: true, port: 443, hostname: 'apollo-serve.com' },
+    production: { ssl: true, port: 443, hostname: 'snoox-xoi' },
     development: { ssl: false, port: 4000, hostname: 'localhost' }
 }
 
-const environment = process.env.NODE_ENV || 'development'
-const config = configurations[environment]
+// const environment = process.env.NODE_ENV;
+// const config = configurations[environment]
 
 const apollo = new ApolloServer({
     typeDefs: schemas,
@@ -73,11 +73,13 @@ var promise = mongoose.connect('mongodb://"heroku_83d9bs84","Aa123123qwe*"@ds121
 //Start the Server
 // const port = app.get('port') || 4000;
 const port = process.env.PORT || 4000;
+const hostname = process.env.hostname;
+const environment = process.env.NODE_ENV;
 promise.then(function () {
     server.listen({ port }, () =>
         console.log(
             '🚀 XOI Server ready at',
-            `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
+            `${environment}://${hostname}:${port}${apollo.graphqlPath}`
         )
     )
 });

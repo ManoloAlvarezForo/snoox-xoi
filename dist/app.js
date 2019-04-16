@@ -14,13 +14,13 @@ var http = require('http');
 
 var configurations = {
   // Note: You may need sudo to run on port 443
-  production: { ssl: true, port: 443, hostname: 'apollo-serve.com' },
-  development: { ssl: false, port: 4000, hostname: 'localhost' } };
+  production: { ssl: true, port: 443, hostname: 'snoox-xoi' },
+  development: { ssl: false, port: 4000, hostname: 'localhost' }
 
 
-var environment = process.env.NODE_ENV || 'development';
-var config = configurations[environment];
-
+  // const environment = process.env.NODE_ENV;
+  // const config = configurations[environment]
+};
 var apollo = new _apolloServerExpress.ApolloServer({
   typeDefs: _schemas.default,
   resolvers: _resolvers.default });
@@ -35,20 +35,20 @@ var app = (0, _express.default)();
 apollo.applyMiddleware({ app: app });
 
 // Create the HTTPS or HTTP server, per configuration
-var server;
-if (config.ssl) {
-  // Assumes certificates are in .ssl folder from package root. Make sure the files
-  // are secured.
-  server = https.createServer(
-  {
-    key: fs.readFileSync("./ssl_cert/noox-key.pem"),
-    cert: fs.readFileSync("./ssl_cert/noox-cert.pem") },
-
-  app);
-
-} else {
-  server = http.createServer(app);
-}
+var server = http.createServer(app);
+// if (config.ssl) {
+//     // Assumes certificates are in .ssl folder from package root. Make sure the files
+//     // are secured.
+//     server = https.createServer(
+//         {
+//             key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
+//             cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
+//         },
+//         app
+//     )
+// } else {
+//     server = http.createServer(app)
+// }
 
 // Add subscription support
 apollo.installSubscriptionHandlers(server);
@@ -57,7 +57,7 @@ apollo.installSubscriptionHandlers(server);
 _mongoose.default.Promise = global.Promise;
 
 // mongoose.connect('mongodb://localhost/url');
-var promise = _mongoose.default.connect('mongodb://localhost/xoi', {
+var promise = _mongoose.default.connect('mongodb://"heroku_83d9bs84","Aa123123qwe*"@ds121696.mlab.com:21696/heroku_83d9bs84', {
   useMongoClient: true
   /* other options */ });
 
@@ -73,11 +73,13 @@ var promise = _mongoose.default.connect('mongodb://localhost/xoi', {
 //Start the Server
 // const port = app.get('port') || 4000;
 var port = process.env.PORT || 4000;
-promise.then(function (db) {
+var hostname = process.env.hostname;
+var environment = process.env.NODE_ENV;
+promise.then(function () {
   server.listen({ port: port }, function () {return (
       console.log(
-      '🚀 XOI Server ready at', "http".concat(
-      config.ssl ? 's' : '', "://").concat(config.hostname, ":").concat(config.port).concat(apollo.graphqlPath)));});
+      '🚀 XOI Server ready at', "".concat(
+      environment, "://").concat(hostname, ":").concat(port).concat(apollo.graphqlPath)));});
 
 
 });
