@@ -71,8 +71,8 @@ var promise = mongoose.connect('mongodb://localhost/xoi', {
 
 // app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
 //Start the Server
-const port = app.get('port') || 4000;
-
+// const port = app.get('port') || 4000;
+const port = process.env.PORT || 4000;
 promise.then(function (db) {
     server.listen({ port }, () =>
         console.log(
