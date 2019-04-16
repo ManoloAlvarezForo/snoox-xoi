@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "Manolo Alvarez Foro",
   "scripts": {
-    "start": "npm run build && node dist/app.js",
+    "start": "node dist/app.js",
     "build": "babel src --out-dir dist",
     "serve": "node dist/app.js"
   },
