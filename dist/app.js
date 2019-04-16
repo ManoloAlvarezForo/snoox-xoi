@@ -57,7 +57,7 @@ apollo.installSubscriptionHandlers(server);
 _mongoose.default.Promise = global.Promise;
 
 // mongoose.connect('mongodb://localhost/url');
-var promise = _mongoose.default.connect('mongodb://"heroku_83d9bs84","Aa123123qwe"@ds121696.mlab.com:21696/heroku_83d9bs84', {
+var promise = _mongoose.default.connect('mongodb://heroku_83d9bs84:tb9qh5oc92uku07c1q9v1g8rof@ds121696.mlab.com:21696/heroku_83d9bs84', {
   useMongoClient: true
   /* other options */ });
 
