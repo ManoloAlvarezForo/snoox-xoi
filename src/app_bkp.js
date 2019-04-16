@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import { ApolloServer } from 'apollo-server-express';
 import schemas from './graphql/schemas';
 import resolvers from './graphql/resolvers';
+import Web3 from 'web3';
+
 
 // const jwt = require('express-jwt');
 const fs = require('fs');
