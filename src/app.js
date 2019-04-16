@@ -35,20 +35,20 @@ const app = express();
 apollo.applyMiddleware({ app })
 
 // Create the HTTPS or HTTP server, per configuration
-var server
-if (config.ssl) {
-    // Assumes certificates are in .ssl folder from package root. Make sure the files
-    // are secured.
-    server = https.createServer(
-        {
-            key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
-            cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
-        },
-        app
-    )
-} else {
-    server = http.createServer(app)
-}
+var server = http.createServer(app)
+// if (config.ssl) {
+//     // Assumes certificates are in .ssl folder from package root. Make sure the files
+//     // are secured.
+//     server = https.createServer(
+//         {
+//             key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
+//             cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
+//         },
+//         app
+//     )
+// } else {
+//     server = http.createServer(app)
+// }
 
 // Add subscription support
 apollo.installSubscriptionHandlers(server)
@@ -73,7 +73,7 @@ var promise = mongoose.connect('mongodb://localhost/xoi', {
 //Start the Server
 // const port = app.get('port') || 4000;
 const port = process.env.PORT || 4000;
-promise.then(function (db) {
+promise.then(function () {
     server.listen({ port }, () =>
         console.log(
             '🚀 XOI Server ready at',
