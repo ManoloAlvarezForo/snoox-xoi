@@ -14,12 +14,12 @@ const http = require('http');
 
 const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: true, port: 443, hostname: 'apollo-serve.com' },
+    production: { ssl: true, port: 443, hostname: 'snoox-xoi' },
     development: { ssl: false, port: 4000, hostname: 'localhost' }
 }
 
-const environment = process.env.NODE_ENV || 'development'
-const config = configurations[environment]
+// const environment = process.env.NODE_ENV;
+// const config = configurations[environment]
 
 const apollo = new ApolloServer({
     typeDefs: schemas,
@@ -35,20 +35,20 @@ const app = express();
 apollo.applyMiddleware({ app })
 
 // Create the HTTPS or HTTP server, per configuration
-var server
-if (config.ssl) {
-    // Assumes certificates are in .ssl folder from package root. Make sure the files
-    // are secured.
-    server = https.createServer(
-        {
-            key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
-            cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
-        },
-        app
-    )
-} else {
-    server = http.createServer(app)
-}
+var server = http.createServer(app)
+// if (config.ssl) {
+//     // Assumes certificates are in .ssl folder from package root. Make sure the files
+//     // are secured.
+//     server = https.createServer(
+//         {
+//             key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
+//             cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
+//         },
+//         app
+//     )
+// } else {
+//     server = http.createServer(app)
+// }
 
 // Add subscription support
 apollo.installSubscriptionHandlers(server)
@@ -57,7 +57,7 @@ apollo.installSubscriptionHandlers(server)
 mongoose.Promise = global.Promise;
 
 // mongoose.connect('mongodb://localhost/url');
-var promise = mongoose.connect('mongodb://localhost/xoi', {
+var promise = mongoose.connect('mongodb://heroku_83d9bs84:tb9qh5oc92uku07c1q9v1g8rof@ds121696.mlab.com:21696/heroku_83d9bs84', {
     useMongoClient: true,
     /* other options */
 });
@@ -73,11 +73,13 @@ var promise = mongoose.connect('mongodb://localhost/xoi', {
 //Start the Server
 // const port = app.get('port') || 4000;
 const port = process.env.PORT || 4000;
-promise.then(function (db) {
+const hostname = process.env.hostname;
+const environment = process.env.NODE_ENV;
+promise.then(function () {
     server.listen({ port }, () =>
         console.log(
             '🚀 XOI Server ready at',
-            `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
+            `${environment}://${hostname}:${port}${apollo.graphqlPath}`
         )
     )
 });

@@ -8,10 +8,11 @@ const Schema = mongoose.Schema;
  */
 export default mongoose.model('client', new Schema({
     name: String,
+    avatar: String,
     lastName: String,
     nit: String,
     nitName: String,
     address: String,
-    phone: Boolean,
+    phone: String,
     createdDate: { type: String, default: moment().format()}
 }));
