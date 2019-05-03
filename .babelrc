@@ -3,5 +3,6 @@
         "@babel/preset-env"
     ],
     "sourceMaps": true,
-    "retainLines": true
+    "retainLines": true,
+    
 }

@@ -5,8 +5,10 @@ import mongoose from 'mongoose';
 import { ApolloServer } from 'apollo-server-express';
 import schemas from './graphql/schemas';
 import resolvers from './graphql/resolvers';
-import path from 'path';
+import Web3 from 'web3';
 
+
+// const jwt = require('express-jwt');
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
@@ -14,7 +16,7 @@ const http = require('http');
 
 const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: true, port: 8443, hostname: 'localhost' },
+    production: { ssl: true, port: 443, hostname: 'apollo-serve.com' },
     development: { ssl: false, port: 4000, hostname: 'localhost' }
 }
 
@@ -27,25 +29,22 @@ const apollo = new ApolloServer({
 })
 
 const app = express();
+// const authMiddleware = jwt({
+//     secret: 'GraphQL-is-aw3some',
+//     credentialsRequired: true
+// });
+// app.use(authMiddleware);
 apollo.applyMiddleware({ app })
 
 // Create the HTTPS or HTTP server, per configuration
-//Fixed to load cert and key files using path and __dirname
-const keyPath = path.join(__dirname, './ssl_files/noox-key.pem');
-const key = fs.readFileSync(keyPath);
-
-const certPath = path.join(__dirname, './ssl_files/noox-cert.pem');
-const cert = fs.readFileSync(certPath);
-
-let server;
-
+var server
 if (config.ssl) {
     // Assumes certificates are in .ssl folder from package root. Make sure the files
     // are secured.
     server = https.createServer(
         {
-            key: key,
-            cert: cert
+            key: fs.readFileSync(`./ssl_cert/noox-key.pem`),
+            cert: fs.readFileSync(`./ssl_cert/noox-cert.pem`)
         },
         app
     )
@@ -65,11 +64,21 @@ var promise = mongoose.connect('mongodb://localhost/xoi', {
     /* other options */
 });
 
-const port = process.env.PORT || 4000;
+// Create an express server and a GraphQL endpoint
+// var app = express();
+// app.use('/graphql', express_graphql({
+//     schema: rootQuery,
+//     graphiql: true
+// }));
+
+// app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
+//Start the Server
+const port = app.get('port') || 4000;
+
 promise.then(function (db) {
-    server.listen(config.port , () =>
+    server.listen({ port }, () =>
         console.log(
-            `🚀 XOI Server in (${environment}) environment ready at`,
+            '🚀 XOI Server ready at',
             `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
         )
     )

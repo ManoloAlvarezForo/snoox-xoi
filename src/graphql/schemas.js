@@ -178,6 +178,52 @@ type BasicApplicant {
     lastName: String
 }
 
+type Client {
+    id: String,
+    name: String,
+    avatar: String,
+    lastName: String,
+    nit: String,
+    nitName: String,
+    address: String,
+    phone: String,
+    createdDate: String
+}
+
+input ClientInput {
+    name: String,
+    avatar: String,
+    lastName: String,
+    nit: String,
+    nitName: String,
+    address: String,
+    phone: String
+}
+
+type Product {
+    id: String,
+    productId: String,
+    image: String,
+    productName: String,
+    price: String,
+    description: String,
+    isAvailable: Boolean,
+    quantity: Int,
+    createdDate: String
+}
+
+input ProductInput {
+    image: String,
+    productName: String,
+    price: String,
+    description: String,
+    quantity: Int,
+}
+
+type ValidToken {
+    isValid: Boolean
+}
+
 type Query {
     users: [User]
     applicants: [Applicant]
@@ -187,6 +233,8 @@ type Query {
     eventsByDate(from: String, to: String): [CalendarEvent]
     calendarEventsByMonth(month: String, year: String, locale: String): [CalendarEvent]
     applicantsByFilter(query: String, properties: [String]): [Applicant]
+    clientsByFilter(query: String, properties: [String]): [Client]
+    isValidToken(token: String): ValidToken
 }
 
 type Mutation {
@@ -196,6 +244,8 @@ type Mutation {
     updateApplicant(applicantToUpdate: AplicantInput): ApplicantUpdatedOutput
     addRoute(route: RouteInput): Route
     addEvent(event: InputEvent): Event
+    addClient(client: ClientInput): Client
+    addProduct(product: ProductInput): Product 
 }
 `;
 

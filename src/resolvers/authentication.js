@@ -1,12 +1,22 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { APP_SECRET } from '../utils/utils'; 
+import { APP_SECRET } from '../utils/utils';
 import * as UserResolver from '../resolvers/user';
 
+/**
+ * Creates the token according the user param.
+ * 
+ * @param {object} user User Object.
+ */
 const createToken = user => {
     return jwt.sign({ userId: user.id }, APP_SECRET);
 }
 
+/**
+ * Validates the user to return a token with the user.
+ * 
+ * @param {object} args Arguments that contains the user object.
+ */
 export const login = async args => {
     const user = await UserResolver.getUserByEmail(args.email)
 
@@ -27,17 +37,38 @@ export const login = async args => {
 }
 
 /**
-   * Resolver to create an new User.
-   */
+ * Validates token.
+ * 
+ * @param {String} token JWT Token to be validated.
+ */
+export const isValidToken = token => {
+    let isValid = {isValid: false};
+
+    try {
+        const response = jwt.verify(token, APP_SECRET);
+        (response) && (isValid.isValid = true)
+    } catch (error) {
+        console.log(error)
+        isValid.isValid = false 
+    } 
+    
+    return isValid;
+}
+
+/**
+ * Creates a new user with the cryptopassword to return a token.
+ * 
+ * @param {object} args Arguments that contains the user object.
+ */
 export const signup = async args => {
 
     //Validates if he email of the new user exist and throw an error.
     const userFound = await UserResolver.getUserByEmail(args.email)
     if (userFound) {
-        throw new Error('This user exist');
+        throw new Error('This user already exists...');
     }
 
-    //encrypt the password.
+    //Encrypt the password.
     const cryptPassword = await bcrypt.hash(args.password, 10)
 
     //Create the new user.
